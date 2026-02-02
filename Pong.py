@@ -10,7 +10,7 @@ class Ball:
         self._y_pos = y_pos
         self._fart_x = fart_x
         self._fart_y = fart_y
-        self._standard = (x_pos, y_pos, fart_x, fart_y)
+        self._standard = (x_pos, y_pos, fart_x, fart_y) # Lagrer startverdier for restart
 
     def tegneBall(self):
         pg.draw.rect(self._vindu, self._farge, (self._x_pos, self._y_pos, 30, 30))
@@ -50,6 +50,7 @@ class Ball:
             return True
         return False
 
+    # Returnerer y-posisjon (brukes av AI)
     def hentY(self):
         return self._y_pos
 
@@ -83,6 +84,7 @@ class Spiller:
         if self._y_pos > VINDU_HOYDE - 100:
             self._y_pos = VINDU_HOYDE - 100
 
+    # Enkel AI som følger ballen
     def ai(self, ball_y):
         if self._y_pos + 50 < ball_y:
             self._y_pos += self._fart_y
@@ -110,6 +112,7 @@ while fortsett:
 
     pg.draw.aaline(vindu, (0,0,0), (VINDU_BREDDE/2,0), (VINDU_BREDDE/2, VINDU_HOYDE))
 
+    # Poengtekst
     tekst2 = font.render(str(poengSpiller), True, (0,0,0))
     vindu.blit(tekst2, (VINDU_BREDDE//2 + 40, 20))
 
@@ -119,16 +122,19 @@ while fortsett:
     ball.flyttBall()
     poengSpiller = ball.grenserBall(spiller, motstander, poengSpiller)
 
+    # Spiller-input
     trykkede_taster = pg.key.get_pressed()
     spiller.tegneSpiller()
     spiller.flyttSpiller(trykkede_taster)
     spiller.endreRetningSpiller()
     spiller.grenserSpiller()
 
+    # Motstander (AI)
     motstander.ai(ball.hentY())
     motstander.grenserSpiller()
     motstander.tegneSpiller()
 
+    # Avslutte spillet
     for event in pg.event.get():
         if event.type == pg.QUIT:
             fortsett = False
